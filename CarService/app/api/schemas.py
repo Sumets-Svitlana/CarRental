@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import UUID
 
 from fastapi import Form
 from pydantic import BaseModel, ConfigDict, field_validator, PositiveFloat
@@ -17,7 +18,7 @@ class BaseCarSchema(BaseModel):
     color: Color
     category: Category
     engine_capacity: PositiveFloat
-    station_id: int
+    station_id: UUID
     cost_per_hour: PositiveFloat
 
     @field_validator('year')
@@ -40,7 +41,7 @@ class BaseCarSchema(BaseModel):
         color: Color = Form(),
         category: Category = Form(),
         engine_capacity: PositiveFloat = Form(),
-        station_id: int = Form(),
+        station_id: UUID = Form(),
         cost_per_hour: PositiveFloat = Form(),
     ) -> 'BaseCarSchema':
         return cls(

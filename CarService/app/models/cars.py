@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, DateTime, Enum, Float, Integer, String
+from sqlalchemy import CheckConstraint, DateTime, Enum, Float, Integer, String, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
@@ -25,7 +25,7 @@ class Car(Base):
         Integer, CheckConstraint('year >= 1900 AND year <= EXTRACT(YEAR FROM NOW())'), nullable=False
     )
     status: Mapped[str] = mapped_column(Enum(CarStatuse), nullable=False, default=CarStatuse.free)
-    station_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    station_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     cost_per_hour: Mapped[float] = mapped_column(Float, CheckConstraint('cost_per_hour > 0'), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     AWS_S3_CARS_BUCKET_NAME: str
     AWS_S3_ENDPOINT_URL: str | None = None
 
+    INTERNAL_STATIONS_URL: str
+
     model_config = SettingsConfigDict(
         case_sensitive=True,
         frozen=True,

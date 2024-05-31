@@ -4,16 +4,30 @@ from fastapi import Depends, UploadFile
 
 from app.api.schemas import CarCreatingSchema, CarSchema, CarUpdatingSchema, StatusUpdateSchema
 from app.car_app.repository import CarRepository
-from app.core.exceptions import CarCreationError, CarDeletingError, CarGettingError, CarUpdateError, UploadFileError
+from app.core.exceptions import (
+    CarCreationError,
+    CarDeletingError,
+    CarGettingError,
+    CarUpdateError,
+    InternalRequestError,
+    UploadFileError,
+)
+from app.internal_gateway.stations import StationGateway
 from app.storage.s3 import get_s3, S3Manager
 
 IMAGE_NAME = '{car_number}_{file_name}'
 
 
 class CarService:
-    def __init__(self, repository: CarRepository = Depends(), s3: S3Manager = Depends(get_s3)):
+    def __init__(
+        self,
+        repository: CarRepository = Depends(),
+        s3: S3Manager = Depends(get_s3),
+        station_gateway: StationGateway = Depends(),
+    ):
         self.repository = repository
         self.s3 = s3
+        self.station_gateway = station_gateway
 
     async def get_cars(self) -> list[CarSchema]:
         cars = await self.repository.get_all()
@@ -32,6 +46,11 @@ class CarService:
         if uploaded is False:
             raise CarCreationError('Cannot update car image', status_code=520)
 
+        try:
+            await self.station_gateway.get_car_station(station_id=creating_schema.station_id)
+        except InternalRequestError as err:
+            raise CarCreationError(f'Cannot find {creating_schema.station_id} station, {err}', status_code=404)
+
         created_car = await self.repository.create(creating_schema, file_name)
         created_car.image = await self.s3.create_presigned_url(file_name)
 
@@ -42,6 +61,11 @@ class CarService:
             file_name = await self._upload_file(car_id, image)
         except UploadFileError as err:
             raise CarUpdateError(err.message, err.status_code)
+
+        try:
+            await self.station_gateway.get_car_station(station_id=updating_schema.station_id)
+        except InternalRequestError as err:
+            raise CarCreationError(f'Cannot find {updating_schema.station_id} station, {err}', status_code=404)
 
         updated_car = await self.repository.update(car_id, updating_schema, file_name)
         updated_car.image = await self.s3.create_presigned_url(file_name)

@@ -23,3 +23,7 @@ class CarDeletingError(BaseServiceError):
 
 class UploadFileError(BaseServiceError):
     pass
+
+
+class InternalRequestError(BaseServiceError):
+    pass

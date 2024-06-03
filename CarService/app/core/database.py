@@ -5,7 +5,7 @@ from typing import AsyncIterable
 from alembic.config import Config
 from pydantic import PostgresDsn
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncEngine, AsyncSession, create_async_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 from app.core.config import get_settings
 

@@ -24,7 +24,7 @@ class Car(Base):
     year: Mapped[int] = mapped_column(
         Integer, CheckConstraint('year >= 1900 AND year <= EXTRACT(YEAR FROM NOW())'), nullable=False
     )
-    status: Mapped[str] = mapped_column(Enum(CarStatuse), nullable=False, default=CarStatuse.free)
+    status: Mapped[str] = mapped_column(Enum(CarStatuse), nullable=False, default=CarStatuse.FREE)
     station_id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     cost_per_hour: Mapped[float] = mapped_column(Float, CheckConstraint('cost_per_hour > 0'), nullable=False)
     created_at: Mapped[datetime] = mapped_column(

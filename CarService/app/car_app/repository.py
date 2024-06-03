@@ -34,7 +34,7 @@ class CarRepository:
         try:
             car = await self._session.scalar(query)
         except IntegrityError as err:
-            raise CarCreationError(f'Cannot create car with {car_schema.model_dump()}, err={err}', status_code=409)
+            raise CarCreationError(f'Cannot create car with {car_schema.number}, err={err}', status_code=409)
 
         return CarSchema.model_validate(car)
 

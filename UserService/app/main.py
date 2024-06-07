@@ -7,7 +7,7 @@ from app.api.routers.auth import auth_router
 from app.api.routers.mail import mail_router
 from app.api.routers.registration import register_router
 from app.api.routers.user import user_router
-from app.core.config import settings
+from app.core.config import get_settings
 from app.core.database import migrate_db
 
 
@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     application = FastAPI(
-        title=settings.PROJECT_NAME,
+        title=get_settings().PROJECT_NAME,
         version='0.1.0',
         lifespan=lifespan,
     )

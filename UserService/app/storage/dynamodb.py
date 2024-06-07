@@ -8,7 +8,7 @@ from mypy_boto3_dynamodb import DynamoDBClient
 from mypy_boto3_dynamodb.service_resource import Table
 
 from app.api.schemas.tables import UserTableSchema
-from app.core.config import settings
+from app.core.config import get_settings
 from app.storage.async_runner import run_async
 from app.storage.exception_handler import Boto3ErrorHandler
 
@@ -42,7 +42,7 @@ class DynamodbRepository(BaseRepository):
 
     @property
     def __client(self) -> DynamoDBClient:
-        return boto3.resource('dynamodb', endpoint_url=self.__endpoint_url)
+        return boto3.resource('dynamodb', endpoint_url=self.__endpoint_url or None)
 
     @lru_cache
     def __table(self, table_name: str) -> Table:
@@ -118,5 +118,5 @@ class DynamodbRepository(BaseRepository):
 @lru_cache
 def get_dynamodb() -> DynamodbRepository:
     return DynamodbRepository(
-        endpoint_url=settings.AWS_DYNAMODB_ENDPOINT_URL,
+        endpoint_url=get_settings().AWS_DYNAMODB_ENDPOINT_URL,
     )

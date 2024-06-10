@@ -2,7 +2,7 @@ from fastapi_jwt import JwtAuthorizationCredentials
 
 from app.api.schemas.users import UserRegistrationSchema, UserSchema
 from app.api.services.password import hash_password
-from app.core.config import settings
+from app.core.config import get_settings
 from app.core.exceptions import UserCreatingError, UserDeletingError, UserGettingError, UserUpdateError
 from app.storage.dynamodb import DynamodbRepository, get_dynamodb
 
@@ -55,7 +55,7 @@ class UserService:
 
 def get_user_service() -> UserService:
     return UserService(
-        table_name=settings.AWS_DYNAMODB_USER_TABLE_NAME,
-        email_index=settings.AWS_DYNAMODB_USER_EMAIL_INDEX,
+        table_name=get_settings().AWS_DYNAMODB_USER_TABLE_NAME,
+        email_index=get_settings().AWS_DYNAMODB_USER_EMAIL_INDEX,
         dynamodb_client=get_dynamodb(),
     )

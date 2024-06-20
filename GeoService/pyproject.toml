@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "geoservice"
+version = "0.1.0"
+description = ""
+authors = ["sumets <svitlana.sumets@nixsolutions.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+redis = "^5.0.4"
+fastapi = "^0.111.0"
+pydantic = "^2.7.1"
+pydantic-settings = "^2.2.1"
+pydantic-extra-types = "^2.7.0"
+
+[tool.poetry.dev-dependencies]
+ruff = "^0.4.6"
+pytest = "^8.2.1"
+fakeredis = "^2.23.2"
+pytest-asyncio = "^0.23.7"
+pytest-mock = "^3.14.0"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+exclude = [".venv", "migrations/"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+
+[tool.ruff.lint]
+select = [
+  "E", # Errors
+  "F", # Pyflakes
+  "I", # isort
+  "T20", # flake8-print
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+split-on-trailing-comma = true
+case-sensitive = false
+detect-same-package = true
+order-by-type = false
+force-sort-within-sections = true
+known-local-folder = ["tests", "app"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

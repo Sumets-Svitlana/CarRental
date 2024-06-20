@@ -9,7 +9,7 @@ from app.api.email_texts import (
     PASSWORD_RESET_BODY,
     PASSWORD_RESET_SUBJECT,
 )
-from app.core.config import settings
+from app.core.config import get_settings
 
 
 class MailSender:
@@ -18,7 +18,7 @@ class MailSender:
 
     def __init__(self, mail: FastMail):
         self.__mail = mail
-        self.base_url = settings.INTERNAL_USER_URL
+        self.base_url = get_settings().INTERNAL_USER_URL
 
     async def send_verification_email(self, email: str, token: str):
         url = urljoin(self.base_url, f'{self.MAIL_VERIFICATION_PATH}{token}')
@@ -49,11 +49,11 @@ class MailSender:
 def get_mail_service() -> MailSender:
     mail = FastMail(
         ConnectionConfig(
-            MAIL_USERNAME=settings.MAIL_USERNAME,
-            MAIL_PASSWORD=settings.MAIL_PASSWORD,
-            MAIL_FROM=settings.MAIL_SENDER,
-            MAIL_PORT=settings.MAIL_PORT,
-            MAIL_SERVER=settings.MAIL_SERVER,
+            MAIL_USERNAME=get_settings().MAIL_USERNAME,
+            MAIL_PASSWORD=get_settings().MAIL_PASSWORD,
+            MAIL_FROM=get_settings().MAIL_SENDER,
+            MAIL_PORT=get_settings().MAIL_PORT,
+            MAIL_SERVER=get_settings().MAIL_SERVER,
             MAIL_STARTTLS=False,
             MAIL_SSL_TLS=True,
         )
